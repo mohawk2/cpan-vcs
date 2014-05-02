@@ -2,6 +2,8 @@ BUGS
 Changes
 MANIFEST
 Makefile.PL
+MYMETA.json
+MYMETA.yml
 README
 VCS.pm
 VCS_dev.pod
@@ -30,5 +32,3 @@ t/01Cvs.t
 t/rcs_testfiles/dir/file
 t/rcs_testfiles/dir/RCS/file,v_for_testing
 t/cvs_testfiles/td/dir/file,v_for_testing
-
-META.yml                                 Module meta-data (added by MakeMaker)
