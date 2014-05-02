@@ -40,7 +40,7 @@ sub _split_log {
         chdir $cwd;
     }
     my @sections = split /\n[=\-]+\n/, $log_text;
-    @sections = ($sections[0], grep { /^revision $version(?:\s+locked by.*?)\n/ } @sections)
+    @sections = ($sections[0], grep { /^revision $version(?:\s+locked by.*?)?\n/ } @sections)
         if $version;
 #map { print "SEC: $_\n" } @sections;
     @sections;
