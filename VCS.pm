@@ -1,15 +1,11 @@
 package VCS;
 
-my @IMPLEMENTATIONS;
-my $CONTAINER_PAT = '(' . join('|', qw(VCS/Dir VCS/File VCS/Version)) . ')';
-
-use vars qw($VERSION);
 use VCS::Dir;
 use VCS::File;
 use VCS::Version;
 use URI;
 
-$VERSION = '0.18';
+our $VERSION = '0.19';
 
 sub parse_url {
     # vcs://hostname/classname/...
