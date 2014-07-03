@@ -4,9 +4,14 @@ use Test::More;
 use IPC::Open3;
 
 BEGIN {
-  my $pid = eval { open3 undef, undef, undef, "cvs --version" };
+  my $fh;
+  my $pid = eval { open3 undef, $fh, undef, "cvs --version" };
+  my $version = join '', $fh->getlines if $fh;
   plan skip_all => '"cvs" execution failed.'
     if $@ or waitpid($pid, 0) != $pid or $?>>8 != 0;
+  $version =~ s#^\s*##;
+  $version = (split ' ', $version)[4];
+  diag "CVS version: $version"; # track "cvsadmin" problem
 }
 
 use File::Copy qw(cp);
