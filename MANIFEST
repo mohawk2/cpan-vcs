@@ -18,7 +18,7 @@ VCS/Rcs.pm
 VCS/Rcs/Dir.pm
 VCS/Rcs/File.pm
 VCS/Rcs/Version.pm
-examples/diff-hist.PL
+examples/diff-hist
 examples/diff-releases
 examples/dir-test.pl
 examples/vcsweb/file.gif
