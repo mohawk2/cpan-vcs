@@ -1,5 +1,5 @@
-#!perl
 use strict;
+use warnings;
 use Test::More;
 use IPC::Open3;
 
@@ -9,20 +9,19 @@ BEGIN {
     if $@ or waitpid($pid, 0) != $pid or $?>>8 != 0;
 }
 
-use Cwd;
 use File::Copy qw(cp);
 use File::Temp;
 use File::Path qw(mkpath);
+use URI::URL;
 my $td = File::Temp->newdir;
 
-my $distribution = cwd();
 my $repository = "$td/repository";
 my $sandbox = "$td/sandbox";
-my $base_url = "vcs://localhost/VCS::Cvs$sandbox/td";
+my $base_url = "vcs://localhost/VCS::Cvs"
+  . URI::URL->newlocal($sandbox)->unix_path
+  . "/td";
 
 BEGIN { use_ok('VCS') }
-BEGIN { use_ok('VCS::File') }
-BEGIN { use_ok('VCS::Dir') }
 
 $ENV{CVSROOT} = $repository;
 mkpath $sandbox, "$repository/td/dir", +{};
@@ -32,7 +31,7 @@ cd $repository
 cvs init
 EOF
 
-cp($distribution.'/t/cvs_testfiles/td/dir/file,v_for_testing',$repository.'/td/dir/file,v');
+cp('t/cvs_testfiles/td/dir/file,v_for_testing',$repository.'/td/dir/file,v');
 
 system <<EOF;
 cd $sandbox
