@@ -1,38 +1,28 @@
-#!perl
 use strict;
+use warnings;
 use Test::More;
+use IPC::Open3;
 BEGIN {
   unless (-e 't/rcs_testfiles/dir/RCS/file,v_for_testing') {
-    plan skip_all => 'All tests have been skipped as file,v_for_testing does not exist (not checked out by cvs?)';
+    plan skip_all => 'file,v_for_testing does not exist.';
   }
-  my $res = system('co -V');
-  if ($res == -1) {
-    plan skip_all => 'All test have been skipped as the co binary (part of RCS)is not on your path';
-  } else {
-    plan tests => 14;
-  }
+  my $pid = eval { open3 undef, undef, undef, "co -V" };
+  plan skip_all => '"co" execution failed.'
+    if $@ or waitpid($pid, 0) != $pid or $?>>8 != 0;
 }
 
-
 use File::Copy qw(cp);
-use Cwd;
-my $td = "/tmp/vcstestdir.$$";
+use File::Temp;
+use File::Path qw(mkpath);
+use URI::URL;
+my $td = File::Temp->newdir;
+my $base_url = "vcs://localhost/VCS::Rcs" . URI::URL->newlocal($td)->unix_path;
 
-my $distribution = cwd();
-my $base_url = "vcs://localhost/VCS::Rcs$td";
+use_ok('VCS');
 
-BEGIN { use_ok('VCS') }
-BEGIN { use_ok('VCS::File') }
-BEGIN { use_ok('VCS::Dir') }
-
-if (!(-d '/tmp'))            { mkdir('/tmp');         }
-if (!(-d $td))               { mkdir($td);            }
-if (!(-d $td.'/dir'))        { mkdir($td.'/dir');     }
-if (!(-d $td.'/dir/RCS'))    { mkdir($td.'/dir/RCS'); }
-
+mkpath "$td/dir/RCS", +{};
 cp('t/rcs_testfiles/dir/file',$td.'/dir');
 cp('t/rcs_testfiles/dir/RCS/file,v_for_testing',$td.'/dir/RCS/file,v');
-
 system <<EOF;
 cd $td/dir
 rcs -q -nmytag1: file
@@ -59,18 +49,6 @@ ok (defined($d),'Dir');
 
 my @c = $d->content;
 is(scalar(@c),1,'content');
-is($c[0]->url(),"$base_url/dir/file",'cotent url');
+is($c[0]->url(),"$base_url/dir/file",'content url');
 
-if ($^O eq 'MSWin32') {
-  print STDERR "\nHmm, you appear to be using a Windows operating system and I don't have a\n",
-                 "handy Win32 Perl system to test something like del /S against, and I'm\n",
-                 "probably not brave enough to put it in even if I had such a system, so I'm\n",
-                 " afraid you will have to clean up '$td' on your own. To get rid of this message\n",
-                 "in future tests of VCS.pm please install a proper operating system\n",
-                 "                                                                  - Greg\n";
-} else {
-system <<EOF;
-[ -d $td ] && rm -rf $td
-EOF
-}
-
+done_testing;
