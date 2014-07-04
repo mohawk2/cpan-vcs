@@ -6,7 +6,7 @@ use IPC::Open3;
 BEGIN {
   my $fh;
   my $pid = eval { open3 undef, $fh, undef, "cvs --version" };
-  my $version = join '', $fh->getlines if $fh;
+  my $version = join '', <$fh> if $fh;
   plan skip_all => '"cvs" execution failed.'
     if $@ or waitpid($pid, 0) != $pid or $?>>8 != 0;
   $version =~ s#^\s*##;
@@ -60,7 +60,7 @@ my ($old, $new) = @versions;
 is($old->version(),'1.1','old version');
 is($new->version(),'1.2','new version');
 
-like($new->date, qr/2001.11.13 04:10:29/, 'date');
+like($new->date, qr/2001.11.\d+ \d+:10:29/, 'date');
 
 is($new->author(),'user','author');
 
@@ -75,6 +75,6 @@ is($th->{'mytag1'}->{$sandbox.'/td/dir/file'},'1.2');
 
 my @c = $d->content;
 is(scalar(@c),1,'content');
-is($c[0]->url(),"$base_url/dir/file",'cotent url');
+is($c[0]->url(),"$base_url/dir/file",'content url');
 
 done_testing;
