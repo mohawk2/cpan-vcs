@@ -29,13 +29,8 @@ my $base_url = "vcs://localhost/VCS::Cvs"
 BEGIN { use_ok('VCS') }
 
 $ENV{CVSROOT} = $repository;
+system 'cvs init';
 mkpath $sandbox, "$repository/td/dir", +{};
-
-system <<EOF;
-cd $repository
-cvs init
-EOF
-
 cp('t/cvs_testfiles/td/dir/file,v_for_testing',$repository.'/td/dir/file,v');
 
 system <<EOF;
@@ -44,7 +39,6 @@ cvs -Q co td
 cd td/dir
 cvs -Q tag mytag1 file
 cvs -Q tag mytag2 file
-cd ../..
 EOF
 
 my $f = VCS::File->new("$base_url/dir/file");

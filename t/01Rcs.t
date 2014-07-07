@@ -41,7 +41,7 @@ ok(scalar(@versions),'versions');
 my ($old, $new) = @versions;
 is($old->version(),'1.1','old version');
 is($new->version(),'1.2','new version');
-like($new->date(),qr/2001.11.13 \d+:10:29/,'date');
+like($new->date(),qr/2001.11.\d+ \d+:10:29/,'date');
 is($new->author(),'user','author');
 
 my $d = VCS::Dir->new("$base_url/dir");
