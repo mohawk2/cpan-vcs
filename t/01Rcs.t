@@ -6,7 +6,7 @@ BEGIN {
   unless (-e 't/rcs_testfiles/dir/RCS/file,v_for_testing') {
     plan skip_all => 'file,v_for_testing does not exist.';
   }
-  my $pid = eval { open3 undef, undef, undef, "co -V" };
+  my $pid = eval { open3 undef, undef, undef, "rcs -V" };
   plan skip_all => '"co" execution failed.'
     if $@ or waitpid($pid, 0) != $pid or $?>>8 != 0;
 }
@@ -41,7 +41,7 @@ ok(scalar(@versions),'versions');
 my ($old, $new) = @versions;
 is($old->version(),'1.1','old version');
 is($new->version(),'1.2','new version');
-is($new->date(),'2001/11/13 04:10:29','date');
+like($new->date(),'2001.11.13 \d+:10:29','date');
 is($new->author(),'user','author');
 
 my $d = VCS::Dir->new("$base_url/dir");
