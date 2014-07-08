@@ -1,6 +1,8 @@
 head	1.2;
 access;
-symbols;
+symbols
+	mytag2:1.2
+	mytag1:1.2;
 locks
 	user:1.2; strict;
 comment	@# @;

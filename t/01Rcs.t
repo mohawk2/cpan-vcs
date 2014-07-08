@@ -7,7 +7,7 @@ BEGIN {
     plan skip_all => 'file,v_for_testing does not exist.';
   }
   my $pid = eval { open3 undef, undef, undef, "rcs -V" };
-  plan skip_all => '"co" execution failed.'
+  plan skip_all => '"rcs" execution failed.'
     if $@ or waitpid($pid, 0) != $pid or $?>>8 != 0;
 }
 
@@ -23,11 +23,6 @@ use_ok('VCS');
 mkpath "$td/dir/RCS", +{};
 cp('t/rcs_testfiles/dir/file',$td.'/dir');
 cp('t/rcs_testfiles/dir/RCS/file,v_for_testing',$td.'/dir/RCS/file,v');
-system <<EOF;
-cd $td/dir
-rcs -q -nmytag1: file
-rcs -q -nmytag2: file
-EOF
 
 my $f = VCS::File->new("$base_url/dir/file");
 ok(defined $f,'VCS::File->new');
