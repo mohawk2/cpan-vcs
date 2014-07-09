@@ -5,6 +5,7 @@ use vars qw($VERSION $LOG_CMD %LOG_CACHE);
 use VCS::Rcs::Dir;
 use VCS::Rcs::File;
 use VCS::Rcs::Version;
+use IPC::Open2;
 
 $VERSION = '0.06';
 
@@ -22,15 +23,14 @@ sub _split_log {
     my $log_text;
     my $cache_id = $self->url;
     unless (defined($log_text = $LOG_CACHE{$cache_id})) {
-        my $cmd =
-            $LOG_CMD .
-            (defined $version ? " -r$version" : '') .
-            " " . $self->path . " |";
-        $LOG_CACHE{$cache_id} = $log_text = $self->_read_pipe($cmd);
+      my @cmd = ($LOG_CMD, (defined $version ? "-r$version" : ()), $self->path);
+      open2 my $fh, undef, @cmd;
+      $LOG_CACHE{$cache_id} = $log_text = join '', <$fh>;
     }
     my @sections = split /\n[=\-]+\n/, $log_text;
     @sections = ($sections[0], grep {/^revision $version(\n|\s)/} @sections) if $version;
 #map { print "SEC: $_\n" } @sections;
+    die "Failed to parse log info from '$log_text'\n" unless @sections;
     @sections;
 }
 
@@ -61,17 +61,6 @@ sub _parse_log_header {
     } @parts;
 #map { print "$_ => $info{$_}\n" } keys %info;
     \%info;
-}
-
-sub _read_pipe {
-    my ($self, $cmd) = @_;
-#use Carp; Carp::cluck "r_p: $cmd\n";
-    local *PIPE;
-    open PIPE, $cmd;
-    local $/ = undef;
-    my $contents = <PIPE>;
-    close PIPE;
-    return $contents;
 }
 
 1;

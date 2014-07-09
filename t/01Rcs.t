@@ -6,9 +6,13 @@ BEGIN {
   unless (-e 't/rcs_testfiles/dir/RCS/file,v_for_testing') {
     plan skip_all => 'file,v_for_testing does not exist.';
   }
-  my $pid = eval { open3 undef, undef, undef, "rcs -V" };
+  my $fh;
+  my $pid = eval { open3 undef, $fh, undef, "rcs -V" };
+  my $version = join '', <$fh> if $fh;
   plan skip_all => '"rcs" execution failed.'
     if $@ or waitpid($pid, 0) != $pid or $?>>8 != 0;
+  $version = (split ' ', $version)[2];
+  diag "RCS version: $version"; # track "failed to split log" problem
 }
 
 use File::Copy qw(cp);
