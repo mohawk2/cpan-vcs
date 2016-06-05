@@ -1,8 +1,8 @@
 use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'	    => 'VCS',
-    'ABSTRACT_FROM' => 'VCS.pm', # finds =head1 NAME line for PPD
-    'VERSION_FROM'  => 'VCS.pm', # finds $VERSION
+    'ABSTRACT_FROM' => 'lib/VCS.pm', # finds =head1 NAME line for PPD
+    'VERSION_FROM'  => 'lib/VCS.pm', # finds $VERSION
     'PREREQ_PM'     => { 'URI' => 0 },
     META_MERGE => {
       "meta-spec" => { version => 2 },
