@@ -1,5 +1,38 @@
 Revision history for Perl extension VCS.
 
+0.25 2016-06-05
+  - no MYMETA in MANIFEST
+  - move to lib layout
+  - update Changes file
+
+0.24 2014-07-09
+  - Give more info in RCS _split_log.
+
+0.23 2014-07-08
+  - Required RCS tags in test data, don't do during test.
+
+0.22 2014-07-07
+  - Try to sidestep "init existing repo only if cvsadmin" test fails.
+
+0.21 2014-07-07
+  - CVS test: Fix test typo.
+  - RCS test for command "rcs" not "co".
+
+0.20 2014-07-04
+  - CVS tests avoid getlines for back-compat, more tolerant on date.
+
+0.19 2014-07-03
+  - simplify generation of "examples"
+  - simplify tests with File::Temp and IPC::Open3
+
+0.18 2014-05-02
+  - add MYMETA.* to MANIFEST
+
+0.17 2014-05-02
+  - update README
+  - fix RT-8440 (schwern)
+  - add GitHub repo info
+
 0.16  Sun Aug 22 10:04:00 PDT 2010
 	- Fix META.yml
 
