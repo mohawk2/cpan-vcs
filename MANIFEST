@@ -2,8 +2,6 @@ BUGS
 Changes
 MANIFEST
 Makefile.PL
-MYMETA.json
-MYMETA.yml
 README
 VCS.pm
 VCS_dev.pod
